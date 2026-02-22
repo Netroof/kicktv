@@ -1,67 +1,17 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Vestel TV Kick Player</title>
+    <title>Kick Hype TV</title>
     <style>
-        body { margin: 0; background: #000; color: #05ea63; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; overflow: hidden; }
-        video { width: 100vw; height: 100vh; background: #000; }
-        #loader { position: absolute; text-align: center; }
+        body { margin: 0; background: #000; overflow: hidden; }
+        iframe { width: 100vw; height: 100vh; border: none; }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
 <body>
-    <div id="loader">
-        <h2>KICK HYPE CANLI YAYIN</h2>
-        <p id="msg">Yayın Linki Alınıyor...</p>
-    </div>
-    <video id="video" controls autoplay playsinline></video>
-
-    <script>
-        const video = document.getElementById('video');
-        const msg = document.getElementById('msg');
-
-        async function initPlayer() {
-            try {
-                // Kick API'sini tarayıcı üzerinden çeken köprü (AllOrigins)
-                const targetUrl = 'https://kick.com/api/v1/channels/hype';
-                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
-                
-                const response = await fetch(proxyUrl);
-                const data = await response.json();
-                const channelData = JSON.parse(data.contents);
-                
-                const m3u8Url = channelData.playback_url;
-
-                if (!m3u8Url) {
-                    msg.innerText = "Yayın şu an aktif değil.";
-                    return;
-                }
-
-                if (Hls.isSupported()) {
-                    const hls = new Hls({
-                        xhrSetup: function(xhr) {
-                            xhr.withCredentials = false; // CORS sorunlarını önlemek için
-                        }
-                    });
-                    hls.loadSource(m3u8Url);
-                    hls.attachMedia(video);
-                    hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                        video.play();
-                        document.getElementById('loader').style.display = 'none';
-                    });
-                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                    video.src = m3u8Url;
-                    video.play();
-                    document.getElementById('loader').style.display = 'none';
-                }
-            } catch (error) {
-                msg.innerText = "Bağlantı Hatası: Kick erişimi reddetti.";
-                console.error(error);
-            }
-        }
-
-        initPlayer();
-    </script>
+    <iframe 
+        src="https://player.kick.com/hype?autoplay=true&muted=false" 
+        allowfullscreen="true">
+    </iframe>
 </body>
 </html>
